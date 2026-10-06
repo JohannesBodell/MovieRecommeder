@@ -6,6 +6,9 @@ def load_movies():
 def load_ratings():
     return pd.read_csv("data/ratings.csv")
 
+
+
+
 if __name__ == "__main__":
     movies = load_movies()
     ratings = load_ratings()
