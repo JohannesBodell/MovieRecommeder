@@ -33,19 +33,4 @@ class MatrixFactorization(nn.Module):
 
         return prediction
 
-    @staticmethod
-    def create_mappings(ratings):
-        unique_users = ratings["userId"].unique()
-        unique_movies = ratings["movieId"].unique()
-
-        user_to_index = {
-            user_id: index
-            for index, user_id in enumerate(unique_users)
-        }
-
-        movie_to_index = {
-            movie_id: index
-            for index, movie_id in enumerate(unique_movies)
-        }
-
-        return user_to_index, movie_to_index
+    

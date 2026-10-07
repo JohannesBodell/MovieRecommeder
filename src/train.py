@@ -2,10 +2,10 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 import torch
 from torch import nn
-from src.models.matrix_factorization import MatrixFactorization
-
-from src.data_loader import load_ratings
-from src.datasets.ratings_dataset import (
+from models.matrix_factorization import MatrixFactorization
+from evaluation.metrics import evaluate_model
+from data_loader import load_ratings
+from datasets.ratings_dataset import (
     RatingsDataset,
     create_mappings
 )
@@ -46,6 +46,12 @@ train_loader = DataLoader(
     shuffle=True
 )
 
+test_loader = DataLoader(
+    test_dataset,
+    batch_size=256,
+    shuffle=False
+)
+
 model = MatrixFactorization(
     num_users=len(user_to_index),
     num_movies=len(movie_to_index),
@@ -69,4 +75,10 @@ for epoch in range(20):
         optimizer.step()
         total_loss += loss.item()
         
-    print(f"Epoch {epoch + 1}, Total Loss: {total_loss/len(train_loader):.4f}")
+    metrics = evaluate_model(model, test_loader)
+    print(f"Epoch {epoch + 1}"
+          f", Total Loss: {total_loss/len(train_loader):.4f}"
+          f", Test MAE: {metrics['mae']:.4f}"
+          f", Test RMSE: {metrics['rmse']:.4f}")
+    
+    evaluation_results = evaluate_model(model, test_loader)
